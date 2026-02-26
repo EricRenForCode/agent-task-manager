@@ -13,6 +13,9 @@ Fetch and summarize recent X posts for a topic, focusing on items that could mov
 - `topic` (required): e.g., “solar energy stocks”, “semiconductor shortage”
 - `time_frame` (hours, default 24)
 - `limit` (default 5)
+- `min_likes` (default 50)
+- `min_retweets` (default 20)
+- `min_replies` (default 10)
 
 **Workflow**
 1. **Compute start_date** as UTC date = now − `time_frame` hours.
@@ -27,7 +30,7 @@ Fetch and summarize recent X posts for a topic, focusing on items that could mov
    ```
    https://twitter.com/search?q=<urlencoded_topic>%20since:<start_date>&src=typed_query&f=live
    ```
-3. **Parse top posts**: capture title/content, author, date, and engagement (likes/retweets/replies). Prefer posts with **engagement ≥ 100**; if not enough results, relax to ≥ 50.
+3. **Parse top posts**: capture title/content, author, date, and engagement (likes/retweets/replies). Filter using `min_likes`, `min_retweets`, `min_replies`.
 4. **Summarize** each item:
    - `Title:` short headline
    - `Summary:` 1–2 sentences
@@ -41,5 +44,6 @@ Fetch and summarize recent X posts for a topic, focusing on items that could mov
    **Link:** …
 
 ## Notes
+- Store the X API key in `references/config.json` under `api_key`.
 - Prioritize items mentioning **earnings, regulation, mergers, supply constraints, subsidies, or breakthroughs**.
 - If X requires login, mention the limitation and suggest Yahoo or RSS alternatives.

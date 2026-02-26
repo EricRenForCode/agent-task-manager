@@ -11,7 +11,7 @@ Fetch recent Yahoo News articles for a topic, then summarize and assess potentia
 ## Quick Start
 **Inputs**
 - `topic` (required)
-- `time_frame` (hours, default 24)
+- `time_frame` (hours, default 24; fallback 48)
 - `limit` (default 5)
 
 **Preferred: RSS script**
@@ -32,7 +32,8 @@ Fetch recent Yahoo News articles for a topic, then summarize and assess potentia
    **Link:** …
 
 ## Notes
-- Focus on keywords: **earnings, regulation, merger, subsidy, shortage, breakthrough**.
+- Focus on keywords: **earnings, regulation, merger, subsidy, shortage, breakthrough, tariff, lawsuit**.
+- Prefer high-authority sources when visible (Reuters, Bloomberg, WSJ, CNBC).
 - If fewer than `limit` items match the time window, return what is available and note the cutoff.
 
 ## Resources
