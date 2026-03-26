@@ -102,15 +102,51 @@ def report_status(tasks_data, tokens_used=0):
 }
 ```
 
-## 开发
+## 前端启动
+
+### 1. 安装依赖
+```bash
+cd frontend/atm-frontend
+npm install
+```
+
+### 2. 启动开发服务器
+```bash
+npm run dev
+```
+
+### 3. 访问前端
+打开 http://localhost:5173
+
+## 完整启动（前后端）
 
 ```bash
-# 安装依赖
+# 终端 1: 启动后端
+cd backend
+docker-compose up -d
+
+# 终端 2: 启动前端
+cd frontend/atm-frontend
+npm run dev
+
+# 访问:
+# - 前端: http://localhost:5173
+# - 后端 API: http://localhost:8000/docs
+```
+
+## 开发
+
+### 后端开发
+```bash
+cd backend
 pip install -r requirements.txt
-
-# 运行迁移
 alembic upgrade head
-
-# 启动开发服务器
 uvicorn src.main:app --reload
+```
+
+### 前端开发
+```bash
+cd frontend/atm-frontend
+npm install
+npm run dev
 ```
