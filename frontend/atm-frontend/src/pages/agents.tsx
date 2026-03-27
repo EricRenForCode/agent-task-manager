@@ -42,7 +42,7 @@ function AgentList() {
             <CardContent className="p-6">
               <div className="flex items-start gap-4">
                 <Avatar className="h-14 w-14">
-                  <AvatarImage src={agent.avatar} />
+                  <AvatarImage src={agent.avatar_url} />
                   <AvatarFallback className="text-lg bg-primary/10 text-primary">
                     {agent.name.charAt(0)}
                   </AvatarFallback>
@@ -64,7 +64,7 @@ function AgentList() {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">任务数</p>
-                    <p className="font-medium">{agent.taskCount}</p>
+                    <p className="font-medium">{agent.stats?.totalTasks ?? 0}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -73,7 +73,7 @@ function AgentList() {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Token消耗</p>
-                    <p className="font-medium">{agent.totalTokens.toLocaleString()}</p>
+                    <p className="font-medium">{(agent.stats?.totalTokens ?? 0).toLocaleString()}</p>
                   </div>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import { Agent, Task, MonthlyCalendar, AgentStats, DashboardStats } from '@/types';
+import type { Agent, Task, DailyCalendar, MonthlyCalendar, AgentStats, DashboardStats } from '@/types';
 
 const API_BASE = 'http://localhost:8000/api/v1';
 
@@ -31,7 +31,7 @@ export const api = {
     fetchApi<MonthlyCalendar>(`/calendar/monthly?year=${year}&month=${month}`),
 
   getDailyTasks: (date: string) =>
-    fetchApi<Task[]>(`/calendar/daily?date=${date}`),
+    fetchApi<DailyCalendar>(`/calendar/daily?date=${date}`),
 
   // Tasks
   getTasks: (params?: { date?: string; agent_id?: string; status?: string }) => {

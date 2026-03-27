@@ -17,10 +17,11 @@ export default function CalendarPage() {
     queryFn: () => api.getMonthlyCalendar(selectedDate.getFullYear(), selectedDate.getMonth() + 1),
   });
 
-  const { data: tasks, isLoading } = useQuery({
+  const { data: dailyData, isLoading } = useQuery({
     queryKey: ['tasks-daily', dateStr],
     queryFn: () => api.getDailyTasks(dateStr),
   });
+  const tasks = dailyData ? Object.values(dailyData.tasks).flat() : [];
 
   return (
     <Layout>
@@ -52,10 +53,10 @@ export default function CalendarPage() {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {tasks?.map((task) => (
+                    {tasks.map((task) => (
                       <TaskCard key={task.id} task={task} />
                     ))}
-                    {tasks?.length === 0 && (
+                    {tasks.length === 0 && (
                       <p className="text-center text-muted-foreground py-6">暂无任务</p>
                     )}
                   </div>

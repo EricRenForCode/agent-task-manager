@@ -1,4 +1,4 @@
-import { Task, TaskStatus } from '@/types';
+import type { Task, TaskStatus } from '@/types';
 import { TaskCard } from './TaskCard';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';

@@ -1,4 +1,4 @@
-import { Task } from '@/types';
+import type { Task } from '@/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';

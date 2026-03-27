@@ -90,15 +90,15 @@ function DashboardContent() {
               icon={CheckSquare}
               description="所有时间"
             />
-            <StatCard 
-              title="今日任务" 
-              value={todayTasks?.length || 0} 
+            <StatCard
+              title="今日任务"
+              value={todayTasks?.summary.total_tasks || 0}
               icon={Calendar}
               description={format(selectedDate, 'MM月dd日')}
             />
-            <StatCard 
-              title="今日Token消耗" 
-              value={(todayTasks?.reduce((sum, t) => sum + t.tokens, 0) || 0).toLocaleString()} 
+            <StatCard
+              title="今日Token消耗"
+              value={(todayTasks?.summary.total_tokens || 0).toLocaleString()}
               icon={Coins}
               description="tokens"
             />
@@ -132,7 +132,7 @@ function DashboardContent() {
                   <Skeleton className="h-96" />
                 </div>
               ) : (
-                <KanbanBoard tasks={todayTasks || []} />
+                <KanbanBoard tasks={todayTasks ? Object.values(todayTasks.tasks).flat() : []} />
               )}
             </CardContent>
           </Card>

@@ -31,7 +31,7 @@ class HeartbeatLog(Base):
     status: Mapped[str] = mapped_column(String(50))  # online, busy, idle, error
     
     # 元数据
-    metadata: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    meta_info: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
     
     # Relationships
     agent: Mapped["Agent"] = relationship(back_populates="heartbeats")

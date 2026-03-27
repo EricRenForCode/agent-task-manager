@@ -5,7 +5,6 @@ import { api } from '@/api/client';
 import { Layout } from '@/components/layout/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TaskCard } from '@/components/task/TaskCard';
 import { ArrowLeft, CheckSquare, Coins, Activity } from 'lucide-react';
@@ -58,7 +57,7 @@ export default function AgentDetail() {
             ) : (
               <div className="flex items-center gap-4">
                 <Avatar className="h-16 w-16">
-                  <AvatarImage src={agent?.avatar} />
+                  <AvatarImage src={agent?.avatar_url} />
                   <AvatarFallback className="text-lg bg-primary/10 text-primary">
                     {agent?.name?.charAt(0) || 'A'}
                   </AvatarFallback>

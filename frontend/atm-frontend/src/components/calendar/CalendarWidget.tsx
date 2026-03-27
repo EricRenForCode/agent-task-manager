@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useCalendarStore } from '@/stores';
 import { cn } from '@/lib/utils';
-import { CalendarDay } from '@/types';
+import type { CalendarDay } from '@/types';
 
 interface CalendarWidgetProps {
   days?: CalendarDay[];
@@ -119,19 +119,19 @@ export function CalendarWidget({ days = [], onDateClick, className }: CalendarWi
                 {/* Task indicators */}
                 {dayTasks && (
                   <div className="absolute bottom-1 left-1 right-1 flex justify-center gap-0.5">
-                    {dayTasks.tasks.todo > 0 && (
+                    {dayTasks.task_count.todo > 0 && (
                       <span className={cn(
                         "h-1.5 w-1.5 rounded-full",
                         isSelected ? "bg-primary-foreground/70" : "bg-muted-foreground"
                       )} />
                     )}
-                    {dayTasks.tasks.ongoing > 0 && (
+                    {dayTasks.task_count.ongoing > 0 && (
                       <span className={cn(
                         "h-1.5 w-1.5 rounded-full",
                         isSelected ? "bg-amber-300" : "bg-amber-500"
                       )} />
                     )}
-                    {dayTasks.tasks.done > 0 && (
+                    {dayTasks.task_count.done > 0 && (
                       <span className={cn(
                         "h-1.5 w-1.5 rounded-full",
                         isSelected ? "bg-emerald-300" : "bg-emerald-500"

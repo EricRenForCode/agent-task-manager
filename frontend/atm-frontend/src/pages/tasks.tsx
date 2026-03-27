@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { TaskStatus } from '@/types';
+import type { TaskStatus } from '@/types';
 
 const statusOptions: { value: string; label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }[] = [
   { value: '', label: '全部状态', variant: 'outline' },

@@ -6,13 +6,15 @@ import {
   Calendar as CalendarIcon,
   Menu,
   X,
-  Bot
+  Bot,
+  Sun,
+  Moon
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/stores';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
