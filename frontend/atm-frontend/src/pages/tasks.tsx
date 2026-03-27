@@ -30,7 +30,7 @@ const statusBadgeVariant = (status: TaskStatus) => {
 };
 
 export default function Tasks() {
-  const [dateFilter, setDateFilter] = useState('');
+  const [dateFilter, setDateFilter] = useState(() => new Date().toISOString().slice(0, 10));
   const [agentFilter, setAgentFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,7 +45,7 @@ export default function Tasks() {
     queryFn: () => api.getTasks({
       date: dateFilter || undefined,
       agent_id: agentFilter || undefined,
-      status: statusFilter || undefined,
+      status: statusFilter ? statusFilter.toLowerCase() : undefined,
     }),
   });
 
