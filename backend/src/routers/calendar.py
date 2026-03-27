@@ -3,6 +3,7 @@ from calendar import monthrange
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select, func, and_
+from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_db
@@ -93,8 +94,7 @@ async def get_daily_calendar(
     """获取单日详细任务列表"""
     # 查询该日所有任务
     result = await db.execute(
-        select(Task, Agent.name.label("agent_name"))
-        .join(Agent)
+        select(Task).options(joinedload(Task.agent))
         .where(Task.task_date == date)
         .order_by(Task.created_at.desc())
     )
@@ -109,10 +109,9 @@ async def get_daily_calendar(
     total_tokens = 0
     agents_involved = set()
     
-    for row in result.all():
-        task = row.Task
-        agent_name = row.agent_name
-        
+    for task in result.scalars().all():
+        agent_name = task.agent.name
+
         task_dict = {
             "id": str(task.id),
             "title": task.title,
@@ -123,7 +122,7 @@ async def get_daily_calendar(
             "created_at": task.created_at.isoformat(),
             "updated_at": task.updated_at.isoformat()
         }
-        
+
         tasks_by_status[task.status.value].append(task_dict)
         total_tokens += task.tokens_consumed
         agents_involved.add(agent_name)
