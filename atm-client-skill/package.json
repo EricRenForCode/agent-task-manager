@@ -1,0 +1,11 @@
+{
+  "name": "atm-client-skill",
+  "version": "1.0.0",
+  "description": "Agent Task Manager client skill for OpenClaw",
+  "bin": {
+    "atm": "./atm-cli.py"
+  },
+  "scripts": {
+    "postinstall": "chmod +x atm-cli.py"
+  }
+}
