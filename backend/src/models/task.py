@@ -44,6 +44,7 @@ class Task(Base):
     
     # 日期
     task_date: Mapped[date] = mapped_column(Date, index=True)
+    original_date: Mapped[date] = mapped_column(Date, index=True)
     
     # Token 消耗
     tokens_consumed: Mapped[int] = mapped_column(Integer, default=0)

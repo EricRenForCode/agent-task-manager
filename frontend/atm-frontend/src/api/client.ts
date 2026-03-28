@@ -3,6 +3,8 @@ import type { Agent, Task, TaskStatus, DailyCalendar, MonthlyCalendar, AgentStat
 const API_BASE = 'http://localhost:8000/api/v1';
 
 function normalizeTask(t: any): Task {
+  const taskDate = t.task_date || t.date || '';
+  const originalDate = t.original_date || taskDate;
   return {
     id: t.id,
     title: t.title,
@@ -11,15 +13,18 @@ function normalizeTask(t: any): Task {
     agentId: t.agent_id || '',
     agentName: t.agent_name || '',
     tokens: t.tokens_consumed ?? 0,
-    date: t.task_date || t.date || '',
+    date: taskDate,
+    carriedFrom: originalDate !== taskDate ? originalDate : undefined,
     createdAt: t.created_at || '',
     updatedAt: t.updated_at || '',
   };
 }
 
 class ApiError extends Error {
-  constructor(public status: number, message: string) {
+  status: number;
+  constructor(status: number, message: string) {
     super(message);
+    this.status = status;
     this.name = 'ApiError';
   }
 }

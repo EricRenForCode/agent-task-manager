@@ -79,6 +79,7 @@ async def create_task(
         status=task_data.status,
         agent_id=task_data.agent_id,
         task_date=task_data.task_date,
+        original_date=task_data.task_date,
         tokens_consumed=task_data.tokens_consumed
     )
     

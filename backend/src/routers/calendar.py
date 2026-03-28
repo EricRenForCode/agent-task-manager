@@ -119,6 +119,8 @@ async def get_daily_calendar(
             "status": task.status.value,
             "agent_name": agent_name,
             "tokens_consumed": task.tokens_consumed,
+            "task_date": task.task_date.isoformat(),
+            "original_date": task.original_date.isoformat(),
             "created_at": task.created_at.isoformat(),
             "updated_at": task.updated_at.isoformat()
         }
