@@ -73,6 +73,21 @@ async def create_task(
             detail="Agent not found"
         )
     
+    # 检查是否已存在相同的待办任务（幂等性保护）
+    existing = await db.execute(
+        select(Task).where(
+            Task.title == task_data.title,
+            Task.agent_id == task_data.agent_id,
+            Task.task_date == task_data.task_date,
+            Task.status == TaskStatus.todo
+        )
+    )
+    if existing.scalar_one_or_none():
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Task with same title, agent and date already exists in todo status"
+        )
+    
     task = Task(
         title=task_data.title,
         description=task_data.description,
