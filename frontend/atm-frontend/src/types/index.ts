@@ -26,6 +26,7 @@ export interface Task {
   agentAvatar?: string;
   tokens: number;
   date: string;
+  carriedFrom?: string;   // original task_date if carried over from a previous day
   createdAt: string;
   updatedAt: string;
 }

@@ -20,6 +20,9 @@ class TaskBase(BaseModel):
 class TaskCreate(TaskBase):
     agent_id: UUID
 
+    def model_post_init(self, __context: any) -> None:
+        object.__setattr__(self, 'original_date', self.task_date)
+
 
 class TaskUpdate(BaseModel):
     title: Optional[str] = Field(None, min_length=1, max_length=200)
@@ -36,6 +39,7 @@ class TaskStatusUpdate(BaseModel):
 class TaskResponse(TaskBase):
     id: UUID
     agent_id: UUID
+    original_date: date
     created_at: datetime
     updated_at: datetime
     

@@ -2,12 +2,13 @@ import type { Task, TaskStatus } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Coins } from 'lucide-react';
+import { Coins, ArrowRight, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TaskCardProps {
   task: Task;
   className?: string;
+  onClick?: (task: Task) => void;
 }
 
 const statusConfig: Record<TaskStatus, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
@@ -16,11 +17,14 @@ const statusConfig: Record<TaskStatus, { label: string; variant: 'default' | 'se
   DONE: { label: '已完成', variant: 'default' },
 };
 
-export function TaskCard({ task, className }: TaskCardProps) {
+export function TaskCard({ task, className, onClick }: TaskCardProps) {
   const status = statusConfig[task.status];
 
   return (
-    <Card className={cn("cursor-pointer hover:shadow-md transition-shadow", className)}>
+    <Card
+      className={cn("cursor-pointer hover:shadow-md transition-shadow", className)}
+      onClick={() => onClick?.(task)}
+    >
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
@@ -31,9 +35,23 @@ export function TaskCard({ task, className }: TaskCardProps) {
               </p>
             )}
           </div>
-          <Badge variant={status.variant} className="shrink-0 text-xs">
-            {status.label}
-          </Badge>
+          <div className="flex flex-col items-end gap-1">
+            <Badge variant={status.variant} className="shrink-0 text-xs">
+              {status.label}
+            </Badge>
+            {task.carriedFrom && task.status === 'TODO' && (
+              <span className="flex items-center gap-0.5 text-xs text-amber-500">
+                <ArrowRight className="h-3 w-3" />
+                {task.carriedFrom}
+              </span>
+            )}
+            {task.carriedFrom && task.status === 'ONGOING' && (
+              <span className="flex items-center gap-0.5 text-xs text-red-500">
+                <AlertCircle className="h-3 w-3" />
+                逾期
+              </span>
+            )}
+          </div>
         </div>
         
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/50">

@@ -4,6 +4,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select, and_
+from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_db
@@ -23,7 +24,7 @@ async def list_tasks(
     db: AsyncSession = Depends(get_db)
 ):
     """获取任务列表，支持多种过滤条件"""
-    query = select(Task).join(Task.agent)
+    query = select(Task).options(joinedload(Task.agent))
     
     # 应用过滤条件
     filters = []
@@ -72,12 +73,28 @@ async def create_task(
             detail="Agent not found"
         )
     
+    # 检查是否已存在相同的待办任务（幂等性保护）
+    existing = await db.execute(
+        select(Task).where(
+            Task.title == task_data.title,
+            Task.agent_id == task_data.agent_id,
+            Task.task_date == task_data.task_date,
+            Task.status == TaskStatus.todo
+        )
+    )
+    if existing.scalar_one_or_none():
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Task with same title, agent and date already exists in todo status"
+        )
+    
     task = Task(
         title=task_data.title,
         description=task_data.description,
         status=task_data.status,
         agent_id=task_data.agent_id,
         task_date=task_data.task_date,
+        original_date=task_data.task_date,
         tokens_consumed=task_data.tokens_consumed
     )
     
@@ -94,16 +111,16 @@ async def get_task(
 ):
     """获取任务详情"""
     result = await db.execute(
-        select(Task).where(Task.id == task_id)
+        select(Task).options(joinedload(Task.agent)).where(Task.id == task_id)
     )
     task = result.scalar_one_or_none()
-    
+
     if not task:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Task not found"
         )
-    
+
     return TaskWithAgent(
         **task.__dict__,
         agent_name=task.agent.name
