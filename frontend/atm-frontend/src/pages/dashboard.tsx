@@ -4,6 +4,7 @@ import { api } from '@/api/client';
 import { Layout } from '@/components/layout/sidebar';
 import { CalendarWidget } from '@/components/calendar/CalendarWidget';
 import { KanbanBoard } from '@/components/task/KanbanBoard';
+import { AddTaskModal } from '@/components/task/AddTaskModal';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCalendarStore } from '@/stores';
@@ -119,10 +120,11 @@ function DashboardContent() {
         {/* Kanban Board */}
         <div className="lg:col-span-2">
           <Card className="h-full">
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
               <CardTitle className="text-lg">
                 {format(selectedDate, 'yyyy年MM月dd日')} 任务看板
               </CardTitle>
+              <AddTaskModal defaultDate={format(selectedDate, 'yyyy-MM-dd')} />
             </CardHeader>
             <CardContent>
               {tasksLoading ? (

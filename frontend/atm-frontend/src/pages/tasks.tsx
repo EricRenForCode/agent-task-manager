@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AddTaskModal } from '@/components/task/AddTaskModal';
 import type { TaskStatus } from '@/types';
 
 const statusOptions: { value: string; label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }[] = [
@@ -60,9 +61,12 @@ export default function Tasks() {
   return (
     <Layout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">任务列表</h1>
-          <p className="text-muted-foreground">查看和筛选所有任务</p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">任务列表</h1>
+            <p className="text-muted-foreground">查看和筛选所有任务</p>
+          </div>
+          <AddTaskModal defaultDate={dateFilter} />
         </div>
 
         {/* Filters */}

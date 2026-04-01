@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import type { Task, TaskStatus } from '@/types';
 import { TaskCard } from './TaskCard';
+import { TaskDetailModal } from './TaskDetailModal';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { Circle, Loader2, CheckCircle2 } from 'lucide-react';
@@ -15,9 +17,10 @@ interface KanbanColumnProps {
   tasks: Task[];
   icon: React.ReactNode;
   colorClass: string;
+  onTaskClick: (task: Task) => void;
 }
 
-function KanbanColumn({ title, status, tasks, icon, colorClass }: KanbanColumnProps) {
+function KanbanColumn({ title, status, tasks, icon, colorClass, onTaskClick }: KanbanColumnProps) {
   const columnTasks = tasks.filter((t) => t.status === status);
 
   return (
@@ -29,11 +32,11 @@ function KanbanColumn({ title, status, tasks, icon, colorClass }: KanbanColumnPr
           {columnTasks.length}
         </span>
       </div>
-      
+
       <ScrollArea className="flex-1 p-3">
         <div className="space-y-3">
           {columnTasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
+            <TaskCard key={task.id} task={task} onClick={onTaskClick} />
           ))}
           {columnTasks.length === 0 && (
             <div className="text-center py-8 text-muted-foreground text-sm">
@@ -47,6 +50,8 @@ function KanbanColumn({ title, status, tasks, icon, colorClass }: KanbanColumnPr
 }
 
 export function KanbanBoard({ tasks, className }: KanbanBoardProps) {
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
   const columns: KanbanColumnProps[] = [
     {
       title: '待办',
@@ -54,6 +59,7 @@ export function KanbanBoard({ tasks, className }: KanbanBoardProps) {
       tasks,
       icon: <Circle className="h-4 w-4 text-muted-foreground" />,
       colorClass: 'border-border',
+      onTaskClick: setSelectedTask,
     },
     {
       title: '进行中',
@@ -61,6 +67,7 @@ export function KanbanBoard({ tasks, className }: KanbanBoardProps) {
       tasks,
       icon: <Loader2 className="h-4 w-4 text-amber-500" />,
       colorClass: 'border-amber-200 dark:border-amber-900',
+      onTaskClick: setSelectedTask,
     },
     {
       title: '已完成',
@@ -68,14 +75,23 @@ export function KanbanBoard({ tasks, className }: KanbanBoardProps) {
       tasks,
       icon: <CheckCircle2 className="h-4 w-4 text-emerald-500" />,
       colorClass: 'border-emerald-200 dark:border-emerald-900',
+      onTaskClick: setSelectedTask,
     },
   ];
 
   return (
-    <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-4 h-full", className)}>
-      {columns.map((column) => (
-        <KanbanColumn key={column.status} {...column} />
-      ))}
-    </div>
+    <>
+      <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-4 h-full", className)}>
+        {columns.map((column) => (
+          <KanbanColumn key={column.status} {...column} />
+        ))}
+      </div>
+
+      <TaskDetailModal
+        task={selectedTask}
+        open={selectedTask !== null}
+        onOpenChange={(open) => { if (!open) setSelectedTask(null); }}
+      />
+    </>
   );
 }

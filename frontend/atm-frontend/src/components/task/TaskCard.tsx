@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 interface TaskCardProps {
   task: Task;
   className?: string;
+  onClick?: (task: Task) => void;
 }
 
 const statusConfig: Record<TaskStatus, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
@@ -16,11 +17,14 @@ const statusConfig: Record<TaskStatus, { label: string; variant: 'default' | 'se
   DONE: { label: '已完成', variant: 'default' },
 };
 
-export function TaskCard({ task, className }: TaskCardProps) {
+export function TaskCard({ task, className, onClick }: TaskCardProps) {
   const status = statusConfig[task.status];
 
   return (
-    <Card className={cn("cursor-pointer hover:shadow-md transition-shadow", className)}>
+    <Card
+      className={cn("cursor-pointer hover:shadow-md transition-shadow", className)}
+      onClick={() => onClick?.(task)}
+    >
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">

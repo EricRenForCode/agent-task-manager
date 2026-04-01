@@ -76,6 +76,20 @@ export const api = {
 
   getAgentStats: (id: string) => fetchApi<AgentStats>(`/agents/${id}/stats`),
 
+  // Create task
+  createTask: (data: {
+    title: string;
+    description?: string;
+    status?: string;
+    task_date: string;
+    agent_id: string;
+    tokens_consumed?: number;
+  }) =>
+    fetchApi<any>('/tasks', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
   // Stats
   getDashboardStats: () => fetchApi<DashboardStats>('/stats/dashboard'),
 };
