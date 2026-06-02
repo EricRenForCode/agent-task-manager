@@ -4,7 +4,7 @@ import { useCalendarStore } from '@/stores';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { format, getDaysInMonth, startOfMonth, getDay, addDays, isSameDay } from 'date-fns';
+import { format, getDaysInMonth, startOfMonth, getDay, isSameDay } from 'date-fns';
 
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -14,7 +14,7 @@ export function CalendarWidget() {
   const year = selectedDate.getFullYear();
   const month = selectedDate.getMonth() + 1;
 
-  const { data: calendarData, isLoading } = useQuery({
+  const { data: calendarData } = useQuery({
     queryKey: ['calendar', 'monthly', year, month],
     queryFn: () => api.getMonthlyCalendar(year, month),
   });

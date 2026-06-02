@@ -79,7 +79,7 @@ async def create_task(
             Task.title == task_data.title,
             Task.agent_id == task_data.agent_id,
             Task.task_date == task_data.task_date,
-            Task.status == TaskStatus.todo
+            Task.status == TaskStatus.TODO
         )
     )
     if existing.scalar_one_or_none():

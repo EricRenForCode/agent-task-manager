@@ -6,11 +6,8 @@ import {
   Calendar as CalendarIcon,
   Menu,
   X,
-  Bot,
-  Sun,
-  Moon
+  Bot
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/stores';
 import { Button } from '@/components/ui/button';

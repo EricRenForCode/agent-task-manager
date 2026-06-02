@@ -1,6 +1,5 @@
 import type { Agent, Task, TaskStatus, DailyCalendar, MonthlyCalendar, AgentStats, DashboardStats } from '@/types';
-
-const API_BASE = 'http://localhost:8000/api/v1';
+import { API_BASE } from '@/api/config';
 
 function normalizeTask(t: any): Task {
   const taskDate = t.task_date || t.date || '';

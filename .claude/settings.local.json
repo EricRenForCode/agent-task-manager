@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.openclaw.ai)",
+      "Bash(python3 -c \"import fastapi, uvicorn, sqlalchemy\")",
+      "Bash(python3 -c \"import aiosqlite\")"
+    ]
+  }
+}
