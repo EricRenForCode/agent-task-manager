@@ -4,7 +4,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from src.models.task import TaskStatus
+from src.models.task import TaskStatus, TaskPriority
 
 
 # ==================== Task Schemas ====================
@@ -13,6 +13,7 @@ class TaskBase(BaseModel):
     title: str = Field(..., min_length=1, max_length=200)
     description: Optional[str] = None
     status: TaskStatus = TaskStatus.TODO
+    priority: TaskPriority = TaskPriority.MEDIUM
     task_date: date
     tokens_consumed: int = Field(default=0, ge=0)
 
@@ -28,6 +29,7 @@ class TaskUpdate(BaseModel):
     title: Optional[str] = Field(None, min_length=1, max_length=200)
     description: Optional[str] = None
     status: Optional[TaskStatus] = None
+    priority: Optional[TaskPriority] = None
     task_date: Optional[date] = None
     tokens_consumed: Optional[int] = Field(None, ge=0)
 

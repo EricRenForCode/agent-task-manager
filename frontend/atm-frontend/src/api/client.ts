@@ -9,6 +9,7 @@ function normalizeTask(t: any): Task {
     title: t.title,
     description: t.description,
     status: (t.status as string).toUpperCase() as TaskStatus,
+    priority: (t.priority as TaskPriority) || 'medium',
     agentId: t.agent_id || '',
     agentName: t.agent_name || '',
     tokens: t.tokens_consumed ?? 0,

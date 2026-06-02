@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
+import { Plus, Flag } from 'lucide-react';
 import { format } from 'date-fns';
 import { api } from '@/api/client';
+import type { TaskPriority } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -25,6 +26,7 @@ export function AddTaskModal({ defaultDate }: AddTaskModalProps) {
   const [date, setDate] = useState(defaultDate ?? today);
   const [agentId, setAgentId] = useState('');
   const [status, setStatus] = useState('todo');
+  const [priority, setPriority] = useState<TaskPriority>('medium');
   const [error, setError] = useState('');
 
   const queryClient = useQueryClient();
@@ -55,6 +57,7 @@ export function AddTaskModal({ defaultDate }: AddTaskModalProps) {
     setDate(defaultDate ?? today);
     setAgentId('');
     setStatus('todo');
+    setPriority('medium');
     setError('');
   }
 
@@ -73,6 +76,7 @@ export function AddTaskModal({ defaultDate }: AddTaskModalProps) {
       title: title.trim(),
       description: description.trim() || undefined,
       status,
+      priority,
       task_date: date,
       agent_id: agentId,
     });
@@ -122,6 +126,22 @@ export function AddTaskModal({ defaultDate }: AddTaskModalProps) {
             </div>
 
             <div className="space-y-1">
+              <label className="text-sm font-medium">优先级</label>
+              <select
+                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                value={priority}
+                onChange={(e) => setPriority(e.target.value as TaskPriority)}
+              >
+                <option value="low">🟢 低</option>
+                <option value="medium">🟡 中</option>
+                <option value="high">🟠 高</option>
+                <option value="critical">🔴 紧急</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
               <label className="text-sm font-medium">状态</label>
               <select
                 className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
@@ -133,22 +153,22 @@ export function AddTaskModal({ defaultDate }: AddTaskModalProps) {
                 <option value="done">已完成</option>
               </select>
             </div>
-          </div>
 
-          <div className="space-y-1">
-            <label className="text-sm font-medium">智能体 *</label>
-            <select
-              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-              value={agentId}
-              onChange={(e) => setAgentId(e.target.value)}
-            >
-              <option value="">请选择智能体...</option>
-              {agents?.map((agent) => (
-                <option key={agent.id} value={agent.id}>
-                  {agent.name}
-                </option>
-              ))}
-            </select>
+            <div className="space-y-1">
+              <label className="text-sm font-medium">智能体 *</label>
+              <select
+                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                value={agentId}
+                onChange={(e) => setAgentId(e.target.value)}
+              >
+                <option value="">请选择智能体...</option>
+                {agents?.map((agent) => (
+                  <option key={agent.id} value={agent.id}>
+                    {agent.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {error && (

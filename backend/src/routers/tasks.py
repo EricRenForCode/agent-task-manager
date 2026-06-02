@@ -8,7 +8,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_db
-from src.models import Task, TaskStatus
+from src.models import Task, TaskStatus, TaskPriority
 from src.schemas import TaskCreate, TaskUpdate, TaskResponse, TaskStatusUpdate, TaskWithAgent
 
 router = APIRouter(prefix="/tasks")
@@ -19,6 +19,7 @@ async def list_tasks(
     date: Optional[date] = Query(None, description="Filter by date (YYYY-MM-DD)"),
     agent_id: Optional[UUID] = Query(None, description="Filter by agent ID"),
     status: Optional[TaskStatus] = Query(None, description="Filter by status"),
+    priority: Optional[TaskPriority] = Query(None, description="Filter by priority"),
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     db: AsyncSession = Depends(get_db)
@@ -34,6 +35,8 @@ async def list_tasks(
         filters.append(Task.agent_id == agent_id)
     if status:
         filters.append(Task.status == status)
+    if priority:
+        filters.append(Task.priority == priority)
     
     if filters:
         query = query.where(and_(*filters))

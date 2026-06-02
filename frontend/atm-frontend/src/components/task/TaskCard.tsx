@@ -1,4 +1,4 @@
-import type { Task, TaskStatus } from '@/types';
+import type { Task, TaskStatus, TaskPriority } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -17,8 +17,16 @@ const statusConfig: Record<TaskStatus, { label: string; variant: 'default' | 'se
   DONE: { label: '已完成', variant: 'default' },
 };
 
+const priorityConfig: Record<TaskPriority, { label: string; color: string }> = {
+  low: { label: '低', color: 'text-slate-400' },
+  medium: { label: '中', color: 'text-amber-400' },
+  high: { label: '高', color: 'text-orange-500' },
+  critical: { label: '紧急', color: 'text-red-500' },
+};
+
 export function TaskCard({ task, className, onClick }: TaskCardProps) {
   const status = statusConfig[task.status];
+  const prio = priorityConfig[task.priority] ?? priorityConfig.medium;
 
   return (
     <Card
@@ -39,6 +47,9 @@ export function TaskCard({ task, className, onClick }: TaskCardProps) {
             <Badge variant={status.variant} className="shrink-0 text-xs">
               {status.label}
             </Badge>
+            <span className={cn('text-xs font-medium', prio.color)}>
+              {prio.label}
+            </span>
             {task.carriedFrom && task.status === 'TODO' && (
               <span className="flex items-center gap-0.5 text-xs text-amber-500">
                 <ArrowRight className="h-3 w-3" />

@@ -19,6 +19,13 @@ class TaskStatus(str, PyEnum):
     DONE = "done"
 
 
+class TaskPriority(str, PyEnum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
 class Task(Base):
     __tablename__ = "tasks"
     
@@ -32,6 +39,11 @@ class Task(Base):
     status: Mapped[TaskStatus] = mapped_column(
         Enum(TaskStatus),
         default=TaskStatus.TODO,
+        index=True
+    )
+    priority: Mapped[TaskPriority] = mapped_column(
+        Enum(TaskPriority, values_callable=lambda x: [e.value for e in x]),
+        default=TaskPriority.MEDIUM,
         index=True
     )
     

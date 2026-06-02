@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
-import { Coins, Calendar, ArrowRight, AlertCircle, User } from 'lucide-react';
-import type { Task, TaskStatus } from '@/types';
+import { Coins, Calendar, ArrowRight, AlertCircle, User, Flag } from 'lucide-react';
+import type { Task, TaskStatus, TaskPriority } from '@/types';
 import {
   Dialog,
   DialogContent,
@@ -45,10 +45,18 @@ function MetaRow({ icon, label, children }: {
   );
 }
 
+const priorityConfig: Record<TaskPriority, { label: string; color: string }> = {
+  low:      { label: '🟢 低',   color: 'text-slate-500' },
+  medium:   { label: '🟡 中',   color: 'text-amber-500' },
+  high:     { label: '🟠 高',   color: 'text-orange-500' },
+  critical: { label: '🔴 紧急', color: 'text-red-500' },
+};
+
 export function TaskDetailModal({ task, open, onOpenChange }: TaskDetailModalProps) {
   if (!task) return null;
 
   const status = statusConfig[task.status];
+  const prio = priorityConfig[task.priority] ?? priorityConfig.medium;
   const formattedDate = format(new Date(task.date), 'yyyy年MM月dd日 (EEEE)', { locale: zhCN });
   const createdAt = format(new Date(task.createdAt), 'yyyy-MM-dd HH:mm');
   const updatedAt = format(new Date(task.updatedAt), 'yyyy-MM-dd HH:mm');
@@ -110,6 +118,10 @@ export function TaskDetailModal({ task, open, onOpenChange }: TaskDetailModalPro
                   逾期（原定 {task.carriedFrom}）
                 </span>
               )}
+            </MetaRow>
+
+            <MetaRow icon={<Flag className="h-4 w-4" />} label="优先级">
+              <span className={prio.color}>{prio.label}</span>
             </MetaRow>
 
             {task.tokens > 0 && (
