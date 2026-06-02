@@ -58,6 +58,7 @@ docker compose logs -f db
 
 ```bash
 cd frontend/atm-frontend
+cp .env.example .env   # sets VITE_API_BASE_URL (backend API base URL)
 npm install
 npm run dev
 ```
@@ -208,6 +209,7 @@ uvicorn src.main:app --reload
 
 # Frontend
 cd frontend/atm-frontend
+cp .env.example .env
 npm install
 npm run dev
 ```
@@ -266,6 +268,7 @@ docker compose logs -f db
 
 ```bash
 cd frontend/atm-frontend
+cp .env.example .env   # 配置 VITE_API_BASE_URL（后端 API 地址）
 npm install
 npm run dev
 ```
@@ -415,6 +418,7 @@ uvicorn src.main:app --reload
 
 # 前端
 cd frontend/atm-frontend
+cp .env.example .env
 npm install
 npm run dev
 ```

@@ -9,7 +9,7 @@
  *   4. If refresh fails, all queued requests reject and user must re-login.
  */
 
-const API_BASE = 'http://localhost:8000/api/v1';
+import { API_BASE } from '@/api/config';
 
 // ── Token storage ────────────────────────────────────────────────────
 const TOKEN_KEY = '***';

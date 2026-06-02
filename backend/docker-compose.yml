@@ -30,7 +30,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=agent_tasks
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - backend_postgres_data:/var/lib/postgresql/data
     ports:
       - "5433:5432"
     healthcheck:
@@ -52,7 +52,8 @@ services:
       - agent-task-network
 
 volumes:
-  postgres_data:
+  backend_postgres_data:
+    external: true
   redis_data:
 
 networks:
