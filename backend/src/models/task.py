@@ -42,7 +42,7 @@ class Task(Base):
         index=True
     )
     priority: Mapped[TaskPriority] = mapped_column(
-        Enum(TaskPriority, values_callable=lambda x: [e.value for e in x]),
+        Enum(TaskPriority, values_callable=lambda x: [e.name.upper() for e in x]),
         default=TaskPriority.MEDIUM,
         index=True
     )

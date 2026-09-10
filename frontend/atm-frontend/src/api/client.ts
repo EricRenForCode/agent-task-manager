@@ -1,13 +1,29 @@
 import type { Agent, Task, TaskStatus, DailyCalendar, MonthlyCalendar, AgentStats, DashboardStats } from '@/types';
 import { API_BASE } from '@/api/config';
 
+function parseContext(description: string | null | undefined) {
+  if (!description) return undefined;
+  try {
+    const parsed = JSON.parse(description);
+    if (parsed && typeof parsed === 'object' && (parsed.projectName || parsed.path || parsed.context || parsed.taskDescription)) {
+      return parsed;
+    }
+  } catch {}
+  return undefined;
+}
+
 function normalizeTask(t: any): Task {
   const taskDate = t.task_date || t.date || '';
   const originalDate = t.original_date || taskDate;
+  const ctx = parseContext(t.description);
+  const context = t.context || ctx;
+  // If description was parsed as structured context, strip it from display description
+  const description = ctx ? ctx.taskDescription || ctx.context || '' : (t.description || '');
   return {
     id: t.id,
     title: t.title,
-    description: t.description,
+    description: description || t.description,
+    context: context,
     status: (t.status as string).toUpperCase() as TaskStatus,
     priority: (t.priority as TaskPriority) || 'medium',
     agentId: t.agent_id || '',

@@ -1,13 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { format } from 'date-fns';
 import { api } from '@/api/client';
 import { Layout } from '@/components/layout/sidebar';
-import { CalendarWidget } from '@/components/calendar/CalendarWidget';
 import { KanbanBoard } from '@/components/task/KanbanBoard';
 import { AddTaskModal } from '@/components/task/AddTaskModal';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useCalendarStore } from '@/stores';
 import { Users, CheckSquare, Coins, Calendar } from 'lucide-react';
 
 function StatCard({ 
@@ -42,8 +39,6 @@ function StatCard({
 }
 
 function DashboardContent() {
-  const { selectedDate } = useCalendarStore();
-
   const { data: agents, isLoading: agentsLoading } = useQuery({
     queryKey: ['agents'],
     queryFn: api.getAgents,
@@ -52,18 +47,6 @@ function DashboardContent() {
   const { data: allTasks, isLoading: allTasksLoading } = useQuery({
     queryKey: ['tasks-all'],
     queryFn: () => api.getTasks(),
-  });
-
-  // Fetch calendar data for current month
-  const { data: calendarData } = useQuery({
-    queryKey: ['calendar-monthly', selectedDate.getFullYear(), selectedDate.getMonth() + 1],
-    queryFn: () => api.getMonthlyCalendar(selectedDate.getFullYear(), selectedDate.getMonth() + 1),
-  });
-
-  // Fetch today's tasks
-  const { data: todayTasks, isLoading: tasksLoading } = useQuery({
-    queryKey: ['tasks-daily', format(selectedDate, 'yyyy-MM-dd')],
-    queryFn: () => api.getDailyTasks(format(selectedDate, 'yyyy-MM-dd')),
   });
 
   return (
@@ -92,14 +75,14 @@ function DashboardContent() {
               description="所有时间"
             />
             <StatCard
-              title="今日任务"
-              value={todayTasks?.summary.total_tasks || 0}
+              title="待办任务"
+              value={allTasks?.filter(t => t.status === 'TODO').length || 0}
               icon={Calendar}
-              description={format(selectedDate, 'MM月dd日')}
+              description="待处理"
             />
             <StatCard
-              title="今日Token消耗"
-              value={(todayTasks?.summary.total_tokens || 0).toLocaleString()}
+              title="总Token消耗"
+              value={(allTasks?.reduce((sum, t) => sum + (t.tokens || 0), 0) || 0).toLocaleString()}
               icon={Coins}
               description="tokens"
             />
@@ -107,39 +90,24 @@ function DashboardContent() {
         )}
       </div>
 
-      {/* Main content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Calendar */}
-        <div className="lg:col-span-1">
-          <CalendarWidget 
-            days={calendarData?.days} 
-            className="h-fit"
-          />
-        </div>
-
-        {/* Kanban Board */}
-        <div className="lg:col-span-2">
-          <Card className="h-full">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <CardTitle className="text-lg">
-                {format(selectedDate, 'yyyy年MM月dd日')} 任务看板
-              </CardTitle>
-              <AddTaskModal defaultDate={format(selectedDate, 'yyyy-MM-dd')} />
-            </CardHeader>
-            <CardContent>
-              {tasksLoading ? (
-                <div className="grid grid-cols-3 gap-4">
-                  <Skeleton className="h-96" />
-                  <Skeleton className="h-96" />
-                  <Skeleton className="h-96" />
-                </div>
-              ) : (
-                <KanbanBoard tasks={todayTasks ? Object.values(todayTasks.tasks).flat() : []} />
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      {/* Kanban Board — full width */}
+      <Card className="h-full">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <CardTitle className="text-lg">任务看板 (全部任务)</CardTitle>
+          <AddTaskModal defaultDate={new Date().toISOString().slice(0, 10)} />
+        </CardHeader>
+        <CardContent>
+          {allTasksLoading ? (
+            <div className="grid grid-cols-3 gap-4">
+              <Skeleton className="h-96" />
+              <Skeleton className="h-96" />
+              <Skeleton className="h-96" />
+            </div>
+          ) : (
+            <KanbanBoard tasks={allTasks || []} />
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

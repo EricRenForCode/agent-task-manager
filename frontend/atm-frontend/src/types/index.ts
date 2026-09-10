@@ -17,10 +17,19 @@ export interface Agent {
 export type TaskStatus = 'TODO' | 'ONGOING' | 'DONE';
 export type TaskPriority = 'low' | 'medium' | 'high' | 'critical';
 
+export interface TaskContext {
+  projectName?: string;
+  path?: string;
+  context?: string;
+  taskDescription?: string;
+  nextTasks?: string[];
+}
+
 export interface Task {
   id: string;
   title: string;
   description?: string;
+  context?: TaskContext;
   status: TaskStatus;
   priority: TaskPriority;
   agentId: string;

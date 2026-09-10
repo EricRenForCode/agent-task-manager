@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
-import { Coins, Calendar, ArrowRight, AlertCircle, User, Flag } from 'lucide-react';
-import type { Task, TaskStatus, TaskPriority } from '@/types';
+import { Coins, Calendar, ArrowRight, AlertCircle, User, Flag, Folder, MapPin, FileText, ArrowUpRight } from 'lucide-react';
+import type { Task, TaskStatus, TaskPriority, TaskContext } from '@/types';
 import {
   Dialog,
   DialogContent,
@@ -60,14 +60,15 @@ export function TaskDetailModal({ task, open, onOpenChange }: TaskDetailModalPro
   const formattedDate = format(new Date(task.date), 'yyyy年MM月dd日 (EEEE)', { locale: zhCN });
   const createdAt = format(new Date(task.createdAt), 'yyyy-MM-dd HH:mm');
   const updatedAt = format(new Date(task.updatedAt), 'yyyy-MM-dd HH:mm');
+  const ctx = task.context;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-lg p-0 overflow-hidden max-h-[85vh] flex flex-col">
         {/* Colored status bar at the top */}
-        <div className={cn('h-1 w-full', status.bar)} />
+        <div className={cn('h-1 w-full shrink-0', status.bar)} />
 
-        <div className="p-6">
+        <div className="p-6 overflow-y-auto">
           <DialogHeader className="mb-4">
             <div className="flex items-start justify-between gap-3 pr-6">
               <DialogTitle className="text-base font-semibold leading-snug">
@@ -79,8 +80,49 @@ export function TaskDetailModal({ task, open, onOpenChange }: TaskDetailModalPro
             </div>
           </DialogHeader>
 
-          {/* Description */}
-          {task.description ? (
+          {/* Structured context block (matches kanban card logic) */}
+          {ctx ? (
+            <div className="space-y-2 mb-5">
+              {ctx.projectName && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Folder className="h-4 w-4 shrink-0 text-blue-400" />
+                  <span className="font-medium">{ctx.projectName}</span>
+                </div>
+              )}
+              {ctx.path && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4 shrink-0 text-purple-400" />
+                  <span className="font-mono text-xs">{ctx.path}</span>
+                </div>
+              )}
+              {ctx.context && (
+                <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <FileText className="h-4 w-4 shrink-0 mt-0.5 text-yellow-400" />
+                  <span>{ctx.context}</span>
+                </div>
+              )}
+              {ctx.taskDescription && (
+                <div className="mt-2 p-3 rounded-md bg-muted/50 border text-sm text-muted-foreground leading-relaxed">
+                  {ctx.taskDescription}
+                </div>
+              )}
+              {ctx.nextTasks && ctx.nextTasks.length > 0 && (
+                <div className="mt-2">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold uppercase text-green-400 mb-1.5">
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                    后续任务建议
+                  </div>
+                  <ul className="space-y-1 pl-4 border-l-2 border-green-500/30">
+                    {ctx.nextTasks.map((nt, i) => (
+                      <li key={i} className="text-sm text-muted-foreground">
+                        {nt}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ) : task.description ? (
             <p className="text-sm text-muted-foreground leading-relaxed mb-5">
               {task.description}
             </p>
